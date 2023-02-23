@@ -25,41 +25,12 @@ class Controller extends BaseController
     /**
      * List all the entities
      *
-     * Provides filtering via request parameters
-     *
      * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request) : JsonResponse
     {
-        $request->validate([
-            'ram_id'        => 'sometimes|exists:ram,id',
-            'hdd_id'        => 'sometimes|exists:hdd,id',
-            'location_id'   => 'sometimes|exists:locations,id',
-            'storage_min'   => 'sometimes|numeric|lt:storage_max',
-            'storage_max'   => 'sometimes|numeric|gt:storage_min',
-        ]);
-
         $query = $this->model->query();
-        if ($request['ram_id']) {
-            $query->where('ram_id', $request['ram_id']);
-        }
-        if ($request['hdd_id']) {
-            $query->where('hdd_id', $request['hdd_id']);
-        }
-        if ($request['location_id']) {
-            $query->where('location_id', $request['location_id']);
-        }
-        if ($request['storage_min'] && $request['storage_max']) {
-            $query->whereBetween('storage', [$request['storage_min'], $request['storage_max']]);
-        } else {
-            if ($request['storage_min']) {
-                $query->where('storage', '>', $request['storage_min']);
-            }
-            if ($request['storage_min']) {
-                $query->where('storage', '<', $request['storage_max']);
-            }
-        }
 
         return new JsonResponse(
             $query->get()

@@ -6,39 +6,44 @@ use App\Models\Hdd;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\Ram;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ProductsImport implements ToModel, WithHeadingRow
+class ProductsImport implements ToCollection, WithHeadingRow
 {
     /**
     * @param array $row
     *
     * @return \App\Models\Product|null
     */
-    public function model(array $row) : ?Product
-    {print 'x';
-        // sort out the lookup values
-        if (!Ram::where('value', $row['ram'])->exists()) {
-            Ram::create(['value' => $row['ram']]);
-        }
-        if (!Hdd::where('value', $row['hdd'])->exists()) {
-            Hdd::create(['value' => $row['hdd']]);
-        }
-        if (!Location::where('value', $row['location'])->exists()) {
-            Location::create(['value' => $row['location']]);
-        }
-print 'y';
-        // make the product
-        return new Product([
-            "model"         => $row['model'],
-            "ram_id"        => Ram::where('value', $row['ram'])->first()->id,
-            "hdd_id"        => Hdd::where('value', $row['hdd'])->first()->id,
-            "location_id"   => Location::where('value', $row['location'])->first()->id,
-            "currency"      => substr($row['price'], 0, 1),
-            "price"         => substr($row['price'], 1),
-            "storage"       => $this->calcStorage($row['hdd']),
-        ]);
+    public function collection(Collection $rows)
+    {
+		foreach ($rows as $row) {
+			// sort out the lookup values
+			$ramval = $this->tidyRam(row['ram']);
+			if (!Ram::where('value', $ramval)->exists()) {
+				Ram::create(['value' => $ramval]);
+			}
+			if (!Hdd::where('value', $row['hdd'])->exists()) {
+				Hdd::create(['value' => $row['hdd']]);
+			}
+			if (!Location::where('value', $row['location'])->exists()) {
+				Location::create(['value' => $row['location']]);
+			}
+
+			// make the product
+			Product::create([
+				"model"         => $row['model'],
+				"ram_id"        => Ram::where('value', $ramval)->first()->id,
+				"hdd_id"        => Hdd::where('value', $row['hdd'])->first()->id,
+				"location_id"   => Location::where('value', $row['location'])->first()->id,
+				"currency"      => substr($row['price'], 0, 1),
+				"price"         => substr($row['price'], 1),
+				"storage"       => $this->calcStorage($row['hdd']),
+			]);
+		}
     }
 
     /**
@@ -56,4 +61,9 @@ print 'y';
 			intval(substr($hdd, strpos('x', $hdd)+2));
 		return  $base_amount * $multiplier;
     }
+
+	private function tidyRam(string $ram) : string
+	{
+		return substr($ram, 0 , strpos($ram, 'GB') + 1);
+	}
 }

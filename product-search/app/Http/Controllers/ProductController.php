@@ -9,6 +9,7 @@ use App\Models\Hdd;
 use App\Models\Location;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -20,6 +21,55 @@ class ProductController extends Controller
     {
         parent::__construct($model);
     }
+
+	/**
+     * List all the Products
+     *
+     * Provides filtering via request parameters
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request) : JsonResponse
+    {
+        $request->validate([
+			'model'			=> 'sometimes|string',
+            'ram_id'        => 'sometimes|exists:ram,id',
+            'hdd_id'        => 'sometimes|exists:hdd,id',
+            'location_id'   => 'sometimes|exists:locations,id',
+            'storage_min'   => 'sometimes|numeric|lt:storage_max',
+            'storage_max'   => 'sometimes|numeric|gt:storage_min',
+        ]);
+
+        $query = $this->model->query();
+		if ($request['model']) {
+			$query->where('model','LIKE','%'.$request['model'].'%');
+		}
+        if ($request['ram_id']) {
+            $query->where('ram_id', $request['ram_id']);
+        }
+        if ($request['hdd_id']) {
+            $query->where('hdd_id', $request['hdd_id']);
+        }
+        if ($request['location_id']) {
+            $query->where('location_id', $request['location_id']);
+        }
+        if ($request['storage_min'] && $request['storage_max']) {
+            $query->whereBetween('storage', [$request['storage_min'], $request['storage_max']]);
+        } else {
+            if ($request['storage_min']) {
+                $query->where('storage', '>', $request['storage_min']);
+            }
+            if ($request['storage_min']) {
+                $query->where('storage', '<', $request['storage_max']);
+            }
+        }
+
+
+        return new JsonResponse(
+            $query->get()
+        );
+	}
 
     /**
      * Create a new Product
@@ -55,6 +105,7 @@ class ProductController extends Controller
             'products' => 'required|mimes:xlx,xls,xlsx,csv|max:2048'
         ]);
 
+		DB::beginTransaction();
         // first clear down all existing data
         Product::query()->delete();
         Ram::query()->delete();
@@ -63,6 +114,7 @@ class ProductController extends Controller
 
         Excel::import(new ProductsImport, $request->file('products'));
 
+		DB::commit();
 		$count = Product::query()->count();
         return new JsonResponse([
             'success' => true,
