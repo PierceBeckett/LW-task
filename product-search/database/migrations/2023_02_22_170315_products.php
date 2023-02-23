@@ -30,6 +30,7 @@ return new class extends Migration
             $table->id();
 			$table->string('model');
 			$table->integer('storage');
+			$table->char('currency');
 			$table->decimal('price', 6, 2);
 
 			// foreign keys auto indexed in mysql
@@ -48,9 +49,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('products');
         Schema::dropIfExists('ram');
         Schema::dropIfExists('hdd');
         Schema::dropIfExists('locations');
-        Schema::dropIfExists('products');
     }
 };

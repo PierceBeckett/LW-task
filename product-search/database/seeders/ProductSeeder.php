@@ -15,7 +15,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             [
                 "id"            => 1,
-                "model"         => 'S',
+                "model"         => 'ABC 2500 XS',
+                "currency"      => '$',
                 "price"         => 5432.99,
                 "storage"       => 100,
                 "ram_id"        => 1,
@@ -24,7 +25,8 @@ class ProductSeeder extends Seeder
             ],
             [
                 "id"            => 2,
-                "model"         => 'S',
+                "model"         => 'XYZ SuperHot 12',
+                "currency"      => '€',
                 "price"         => 2345.99,
                 "storage"       => 200,
                 "ram_id"        => 3,
@@ -33,7 +35,8 @@ class ProductSeeder extends Seeder
             ],
             [
                 "id"            => 3,
-                "model"         => 'S',
+                "model"         => 'Precision500 Ultra',
+                "currency"      => '£',
                 "price"         => 1234.99,
                 "storage"       => 300,
                 "ram_id"        => 2,

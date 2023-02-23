@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Hdd extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
     protected $table = 'hdd';
 
     protected $fillable = [

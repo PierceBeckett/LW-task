@@ -97,7 +97,7 @@ class Controller extends BaseController
      */
     public function update(Request $request, int $id) : JsonResponse
     {
-		$ent = $this->model->query()->find($id);
+        $ent = $this->model->query()->find($id);
         return new JsonResponse($ent->update($request->all()));
     }
 
@@ -109,7 +109,7 @@ class Controller extends BaseController
      */
     public function destroy(int $id) : JsonResponse
     {
-		$ent = $this->model->query()->find($id);
+        $ent = $this->model->query()->find($id);
         return new JsonResponse($ent->delete());
     }
 }

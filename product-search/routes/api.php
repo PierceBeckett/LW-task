@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RamController;
+use App\Http\Controllers\HddController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +34,7 @@ Route::delete('product/{id}', [ProductController::class, 'destroy'])
     ->where(['id' => '[0-9]+']);
 
 // product import from excel
-Route::get('product/import', [ProductController::class, 'import']);
+Route::post('product/import', [ProductController::class, 'import']);
 
 // lookup table crud
 

@@ -9,6 +9,7 @@ class Ram extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'ram';
 
     protected $fillable = [
