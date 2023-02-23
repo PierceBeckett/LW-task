@@ -22,7 +22,7 @@ class ProductController extends Controller
         parent::__construct($model);
     }
 
-	/**
+    /**
      * List all the Products
      *
      * Provides filtering via request parameters
@@ -33,7 +33,7 @@ class ProductController extends Controller
     public function index(Request $request) : JsonResponse
     {
         $request->validate([
-			'model'			=> 'sometimes|string',
+            'model'         => 'sometimes|string',
             'ram_id'        => 'sometimes|exists:ram,id',
             'hdd_id'        => 'sometimes|exists:hdd,id',
             'location_id'   => 'sometimes|exists:locations,id',
@@ -42,9 +42,9 @@ class ProductController extends Controller
         ]);
 
         $query = $this->model->query();
-		if ($request['model']) {
-			$query->where('model','LIKE','%'.$request['model'].'%');
-		}
+        if ($request['model']) {
+            $query->where('model', 'LIKE', '%'.$request['model'].'%');
+        }
         if ($request['ram_id']) {
             $query->where('ram_id', $request['ram_id']);
         }
@@ -69,7 +69,7 @@ class ProductController extends Controller
         return new JsonResponse(
             $query->get()
         );
-	}
+    }
 
     /**
      * Create a new Product
@@ -83,7 +83,6 @@ class ProductController extends Controller
         // any lookup values need to be setup before inserting
         $request->validate([
             'model'         => 'required|string',
-            'currency'      => 'required|in:$,€,£', // eventually replace with proper enum
             'price'         => 'required|decimal:0,2',
             'ram_id'        => 'required|exists:ram,id',
             'hdd_id'        => 'required|exists:hdd,id',
@@ -105,7 +104,8 @@ class ProductController extends Controller
             'products' => 'required|mimes:xlx,xls,xlsx,csv|max:2048'
         ]);
 
-		DB::beginTransaction();
+        DB::beginTransaction();
+        set_time_limit(0);
         // first clear down all existing data
         Product::query()->delete();
         Ram::query()->delete();
@@ -114,8 +114,8 @@ class ProductController extends Controller
 
         Excel::import(new ProductsImport, $request->file('products'));
 
-		DB::commit();
-		$count = Product::query()->count();
+        DB::commit();
+        $count = Product::query()->count();
         return new JsonResponse([
             'success' => true,
             'message' => 'Successfully imported products. Totalling '.$count,

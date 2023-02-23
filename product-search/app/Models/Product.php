@@ -12,7 +12,6 @@ class Product extends Model
     protected $fillable = [
         'model',
         'storage',
-        'currency',
         'price',
         'ram_id',
         'hdd_id',
@@ -27,10 +26,10 @@ class Product extends Model
     }
     public function getHddAttribute() : string
     {
-        return Hdd::find($this->ram_id)->value;
+        return Hdd::find($this->hdd_id)->value;
     }
     public function getLocationAttribute() : string
     {
-        return Location::find($this->ram_id)->value;
+        return Location::find($this->location_id)->value;
     }
 }

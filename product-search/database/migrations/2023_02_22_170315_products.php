@@ -30,8 +30,7 @@ return new class extends Migration
             $table->id();
 			$table->string('model');
 			$table->integer('storage');
-			$table->char('currency');
-			$table->decimal('price', 6, 2);
+			$table->string('price');
 
 			// foreign keys auto indexed in mysql
 			// consider removing in place of indexes only for performance
