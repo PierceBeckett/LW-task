@@ -17,7 +17,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{local-laravel}}/api/product/",
+					"raw": "{{local-laravel}}/api/product/?ram_id=1&hdd_id=2&location_id=3&storage_min=100&storage_max=500",
 					"host": [
 						"{{local-laravel}}"
 					],
@@ -25,6 +25,92 @@
 						"api",
 						"product",
 						""
+					],
+					"query": [
+						{
+							"key": "ram_id",
+							"value": "1"
+						},
+						{
+							"key": "hdd_id",
+							"value": "2"
+						},
+						{
+							"key": "location_id",
+							"value": "3"
+						},
+						{
+							"key": "storage_min",
+							"value": "100"
+						},
+						{
+							"key": "storage_max",
+							"value": "500"
+						},
+						{
+							"key": "model",
+							"value": "ultra",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product import",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "products",
+							"type": "file",
+							"src": "/home/pierce/Downloads/LeaseWeb_servers_filters_assignment.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{local-laravel}}/api/product/import",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ram options list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{local-laravel}}/api/ram",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"ram"
 					]
 				}
 			},
