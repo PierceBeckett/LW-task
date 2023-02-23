@@ -8,4 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'model',
+        'storage',
+        'price',
+    ];
+
+    protected $hidden = [
+        'ram_id',
+        'hdd_id',
+        'location_id',
+    ];
+
+    protected $appends = ['ram','hdd','location'];
+
+    public function getRamAttribute() : string
+    {
+        return Ram::find($this->ram_id)->value;
+    }
+    public function getHddAttribute() : string
+    {
+        return Hdd::find($this->ram_id)->value;
+    }
+    public function getLocationAttribute() : string
+    {
+        return Location::find($this->ram_id)->value;
+    }
 }

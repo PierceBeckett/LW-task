@@ -1,0 +1,61 @@
+{
+	"info": {
+		"_postman_id": "21580b58-3dd1-4ae4-ab03-f3d3bf2aeaaa",
+		"name": "LW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "products list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{local-laravel}}/api/product/",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"product",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local-laravel",
+			"value": "http://127.0.0.1:12345",
+			"type": "default"
+		}
+	]
+}
