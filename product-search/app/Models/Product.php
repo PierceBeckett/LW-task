@@ -12,6 +12,7 @@ class Product extends Model
     protected $fillable = [
         'model',
         'storage',
+        'currency',
         'price',
         'ram_id',
         'hdd_id',

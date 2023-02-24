@@ -18,7 +18,8 @@ class ProductTest extends TestCase
     {
         $data = [
             "model"     => 'new model',
-            "price"     => '$987.65',
+            "currency"  => '$',
+            "price"     => '987.65',
             "storage"   => 4000,
             "ram_id"    => rand(1, 3),
             "hdd_id"    => rand(1, 3),

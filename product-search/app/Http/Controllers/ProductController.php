@@ -39,6 +39,8 @@ class ProductController extends Controller
             'location_id'   => 'sometimes|exists:locations,id',
             'storage_min'   => 'sometimes|numeric|lt:storage_max',
             'storage_max'   => 'sometimes|numeric|gt:storage_min',
+            'sort_by'       => 'sometimes|in:model,price,storage',
+            'sort_dir'      => 'sometimes|in:asc,desc',
         ]);
 
         $query = $this->model->query();
@@ -65,9 +67,11 @@ class ProductController extends Controller
             }
         }
 
+        $sort_by = $request['sort_by'] ?? 'id';
+        $sort_dir = $request['sort_dir'] ?? 'asc';
 
         return new JsonResponse(
-            $query->get()
+            $query->orderBy($sort_by, $sort_dir)->get()
         );
     }
 
@@ -83,6 +87,7 @@ class ProductController extends Controller
         // any lookup values need to be setup before inserting
         $request->validate([
             'model'         => 'required|string',
+            'currency'      => 'required|in:$,£,€',
             'price'         => 'required|decimal:0,2',
             'ram_id'        => 'required|exists:ram,id',
             'hdd_id'        => 'required|exists:hdd,id',
