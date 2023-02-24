@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>BP Beckett - Leaseweb challenge</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -13,12 +13,25 @@
 		<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 		<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script
+			src="https://unpkg.com/@mui/material@5.0.0/umd/material-ui.development.js"
+			crossorigin="anonymous"
+			></script>
+		<!-- Fonts to support Material Design -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+			/>
+		<!-- Icons to support Material Design -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 		<style>
 			label {
-				width: 60px;
+				width: 360px;
 			}
 			.left {
 				float: left;
@@ -50,11 +63,12 @@
 		<div id="root" ></div>
 
 		<script type="text/babel">
+
 		function LWForm() {
 
 			// init vars
 			const be_server = 'http://pbnc.mywire.org:12345/api/';
-			const [search, setSearch] = React.useState({});
+			const [search, setSearch] = React.useState({'storage_min' : 100, 'storage_max': 30000});
 			const [ramCheck, setRamCheck] = React.useState([]);
 			const [ram_opts, setRam] = React.useState([]);
 			const [hdd_opts, setHdd] = React.useState([]);
@@ -72,7 +86,6 @@
 				const updatedRamState = ramCheck.map((item, index) =>
 					index === position ? !item : item
 				);
-				console.log(updatedRamState);
 				setRamCheck(updatedRamState);
 			};
 
@@ -124,7 +137,7 @@
 			return (
 				<form>
 					<div className="left">
-					<label>Model
+					<label>Model &nbsp;
 					<input
 						name="model"
 						type="text"
@@ -133,22 +146,32 @@
 						/>
 					</label>
 
+					<label>Storage</label>
+					<div>
+						Min - <span>{search?.storage_min}</span>GB <input type="range" min="100" step="100" max="5000" value={search?.storage_min} id="storageMin"
+						name="storage_min" onChange={handleChange} />
+					</div>
+					<div>
+					Max - <span>{search?.storage_max/1000}</span>TB <input type="range" min="1000" step="100" max="30000" value={search?.storage_max} id="storageMax" 
+						name="storage_max" onChange={handleChange} />
+					</div>
+
 					<label className='rammer'>RAM<br />
 						{ram_opts.length > 0 && ram_opts.map((option) => {
 							return 	(
 								<>
+								<label htmlFor={'ramChk-'+option.id}>{option.value}</label>
 								<input name="ram_id" type="checkbox" key={option.id} value={option.id} label={option.value}
 									id={'ramChk-'+option.id}
 									isselected={ramCheck[option.id]}
 									onChange={() => handleRamChange(option.id)}
 								/>
-								<label htmlFor={'ramChk-'+option.id}>{option.value}</label>
 								</>
 							);
 						})}
 					</label>
 
-					<label>HDD
+					<label>HDD &nbsp;
 					<select
 						name="hdd_id"
 						label="hdd"
@@ -166,7 +189,7 @@
 					</select>
 					</label>
 
-					<label>Location
+					<label>Location &nbsp;
 					<select
 						name="location_id"
 						label="loc"
@@ -192,6 +215,7 @@
 							<th>Model</th>
 							<th>Ram</th>
 							<th>HDD</th>
+							<th>Storage</th>
 							<th>Location</th>
 							<th>Price</th>
 						</tr>
@@ -203,6 +227,7 @@
 									<td>{product.model}</td>
 									<td>{product.ram}</td>
 									<td>{product.hdd}</td>
+									<td>{product.storage}GB</td>
 									<td>{product.location}</td>
 									<td>{product.currency+product.price}</td>
 								</tr>

@@ -22,6 +22,8 @@ class Controller extends BaseController
     {
     }
 
+	protected $sort_by = 'value';
+
     /**
      * List all the entities
      *
@@ -33,7 +35,7 @@ class Controller extends BaseController
         $query = $this->model->query();
 
         return new JsonResponse(
-            $query->get()
+            $query->orderByRaw($this->sort_by)->get()
         );
     }
 

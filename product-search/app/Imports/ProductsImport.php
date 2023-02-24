@@ -39,7 +39,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             "hdd_id"        => Hdd::where('value', $hddval)->first()->id,
             "location_id"   => Location::where('value', $row['location'])->first()->id,
             "currency"      => preg_replace('/[0-9.]+/', '', $row['price']),
-            "price"         => intval(preg_replace('/[^0-9.]+/', '', $row['price']), 10),
+            "price"         => floatval(preg_replace('/[^0-9.]+/', '', $row['price'])),
             "storage"       => $this->calcStorage($row['hdd']),
         ]);
     }
