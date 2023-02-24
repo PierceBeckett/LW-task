@@ -22,7 +22,7 @@ class Controller extends BaseController
     {
     }
 
-	protected $sort_by = 'value';
+    protected $sort_by = 'value';
 
     /**
      * List all the entities

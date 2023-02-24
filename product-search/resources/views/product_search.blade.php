@@ -74,6 +74,7 @@
 			const [hdd_opts, setHdd] = React.useState([]);
 			const [loc_opts, setLoc] = React.useState([]);
 			const [products, setProducts] = React.useState([]);
+  			const [uploadFile, setUploadFile] = React.useState();
 
 			const handleChange = (e) => {
 				setSearch((prevState) => ({
@@ -89,8 +90,43 @@
 				setRamCheck(updatedRamState);
 			};
 
+			const handleUpload = (e) => {
+				e.preventDefault();
+
+				// prevent user interaction while uploading
+				const modal = document.getElementById("uploadModal");
+				modal.style.display = "block";
+
+				let data = new FormData();
+  				data.append("products", uploadFile);
+
+				fetch(be_server+'product/import',
+					{
+						method: 'POST',
+						body: data
+					},
+					true
+				)
+				.then((data) => data.json())
+				.then((response) => {
+					setUploadFile();
+					if (response.success) {
+						doLookups();
+						alert('Upload succeeded. '+response.message);
+						doSearch();
+					} else {
+						alert('Upload failed. '+response.message);
+					}
+					modal.style.display = "none";
+				})
+				.catch((error) => {
+					setUploadFile();
+					alert('Upload failed. '+error);
+				});
+			};
+
 			// load up the lookup lists
-			React.useEffect(() => {
+			const doLookups = () => {
 				fetch(be_server+'ram', {"method" : 'GET'})
 					.then((response) => response.json())
 					.then((data) => {
@@ -111,15 +147,16 @@
 					.then((data) => {
 						setLoc(data);
 					});
+			}
+			// on page first load
+			React.useEffect(() => {
+				doLookups();
 			}, []);
 
 			// function for controls change
 			// i.e. retrieve the products
-			React.useEffect(() => {
-				if (Object.keys(search).length > 0 ||
-					ramCheck.length > 0
-				) {
-					let params = '?';
+			const doSearch = () => {
+				let params = '?';
 					for (let key in search) {
 						if (search[key]) params += key+'='+search[key]+'&';
 					};
@@ -131,6 +168,12 @@
 					.then((data) => {
 						setProducts(data);
 					})
+			}
+			React.useEffect(() => {
+				if (Object.keys(search).length > 0 ||
+					ramCheck.length > 0
+				) {
+					doSearch();
 				}
 			}, [search, ramCheck]);
 
@@ -207,7 +250,28 @@
 					</select>
 					</label>
 
+					<label>Upload new data
+					{uploadFile?.name || "Choose CSV/XLS"}
+					<input type="file" name="products"
+                		accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+						onClick={(e) => {
+							e.target.value = "";
+						}} // this is to clear value in case same file reselected after error
+						onChange={(e) => {
+							setUploadFile(e.target.files[0]);
+						}}
+						/>
+					{uploadFile && (
+						<button
+							action="primary"
+							onClick={(e) => {
+								handleUpload(e);
+							}}
+						>{"Upload " + uploadFile?.name}</button>
+					)}
+					</label>
 					</div>
+
 					<div className="right">
 					<table>
 						<thead>
@@ -247,6 +311,38 @@
 		<div class="footer">
 			<p>Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</p>
 		</div>
+
+
+		<div id="uploadModal" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+					<h2>Data is currently uploading ...</h2>
+			</div>
+		</div>
+		<style>
+			 /* The Modal (background) */
+		.modal {
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content/Box */
+		.modal-content {
+		background-color: #fefefe;
+		margin: 35% auto; /* 15% from the top and centered */
+		padding: 20px;
+		border: 1px solid #888;
+		width: 80%; /* Could be more or less, depending on screen size */
+		}
+		</style>
 
 	</body>
 </html>

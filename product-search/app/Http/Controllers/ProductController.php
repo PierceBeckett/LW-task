@@ -19,7 +19,7 @@ class ProductController extends Controller
 {
     public function __construct(private Product $model = new Product())
     {
-		$this->sort_by = 'model';
+        $this->sort_by = 'model';
         parent::__construct($model);
     }
 
