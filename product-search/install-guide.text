@@ -1,0 +1,30 @@
+
+You'll need a computer with Docker (with WSL2 if you're on Windows)
+
+Choose a folder on you machine where you'll store the code.
+Open a command prompt and run the following commands:
+
+==================================================
+git clone git@github.com:PierceBeckett/LW-task.git
+
+cd LW-task/
+
+cd product-search/
+
+./setup.sh
+=================================================
+
+(You can run setup multiple times if needed)
+
+Check the installation has worked by running:
+
+=================================================
+./test.sh
+=================================================
+
+You should see all green and no red :)
+The frontend is accessible at http://127.0.0.1:12345
+The backend API is at http://127.0.0.1:12345/api
+
+You can find a postman file within this repo for checking it directly.
+

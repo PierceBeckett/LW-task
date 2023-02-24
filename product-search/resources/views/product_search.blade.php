@@ -67,7 +67,7 @@
 		function LWForm() {
 
 			// init vars
-			const be_server = 'http://pbnc.mywire.org:12345/api/';
+			const be_server = 'http://127.0.0.1:12345/api/';
 			const [search, setSearch] = React.useState({'storage_min' : 100, 'storage_max': 30000});
 			const [ramCheck, setRamCheck] = React.useState([]);
 			const [ram_opts, setRam] = React.useState([]);

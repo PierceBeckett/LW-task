@@ -17,7 +17,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{local-laravel}}/api/product/?ram_id=1&hdd_id=2&location_id=3&storage_min=100&storage_max=500",
+					"raw": "{{local-laravel}}/api/product/?ram_id[]=2&hdd_id=1&location_id=2&storage_min=2000&storage_max=5000&model=Dell R210&sort_by=storage&sort_dir=asc&ram_id[]=3",
 					"host": [
 						"{{local-laravel}}"
 					],
@@ -28,29 +28,40 @@
 					],
 					"query": [
 						{
-							"key": "ram_id",
-							"value": "1"
-						},
-						{
-							"key": "hdd_id",
+							"key": "ram_id[]",
 							"value": "2"
 						},
 						{
+							"key": "hdd_id",
+							"value": "1"
+						},
+						{
 							"key": "location_id",
-							"value": "3"
+							"value": "2"
 						},
 						{
 							"key": "storage_min",
-							"value": "100"
+							"value": "2000"
 						},
 						{
 							"key": "storage_max",
-							"value": "500"
+							"value": "5000"
 						},
 						{
 							"key": "model",
-							"value": "ultra",
-							"disabled": true
+							"value": "Dell R210"
+						},
+						{
+							"key": "sort_by",
+							"value": "storage"
+						},
+						{
+							"key": "sort_dir",
+							"value": "asc"
+						},
+						{
+							"key": "ram_id[]",
+							"value": "3"
 						}
 					]
 				}
@@ -74,7 +85,7 @@
 						{
 							"key": "products",
 							"type": "file",
-							"src": "/home/pierce/Downloads/LeaseWeb_servers_filters_assignment.xlsx"
+							"src": "/home/pierce/velv/LW-task/product-search/storage/import-example.csv"
 						}
 					]
 				},
@@ -111,6 +122,137 @@
 					"path": [
 						"api",
 						"ram"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hdd options list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{local-laravel}}/api/hdd",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"hdd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "locations options list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{local-laravel}}/api/location",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local-laravel}}/api/product/:id",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"product",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1234"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{local-laravel}}/api/product/:id",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"product",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1381"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"model\"         : \"model ABC new\",\n    \"currency\"      : \"£\",\n    \"price\"         : 999.50,\n    \"storage\"       : 6000,\n    \"ram_id\"        : 23,\n    \"hdd_id\"        : 43,\n    \"location_id\"   : 23\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local-laravel}}/api/product",
+					"host": [
+						"{{local-laravel}}"
+					],
+					"path": [
+						"api",
+						"product"
 					]
 				}
 			},
