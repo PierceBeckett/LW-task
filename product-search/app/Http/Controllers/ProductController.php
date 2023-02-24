@@ -87,6 +87,7 @@ class ProductController extends Controller
         // any lookup values need to be setup before inserting
         $request->validate([
             'model'         => 'required|string',
+            'storage'       => 'required|numeric',
             'currency'      => 'required|in:$,£,€',
             'price'         => 'required|decimal:0,2',
             'ram_id'        => 'required|exists:ram,id',

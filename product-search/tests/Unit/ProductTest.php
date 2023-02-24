@@ -17,12 +17,12 @@ class ProductTest extends TestCase
     public function testProductCrud(): void
     {
         $data = [
-            "model"     => 'new model',
-            "currency"  => '$',
-            "price"     => '987.65',
-            "storage"   => 4000,
-            "ram_id"    => rand(1, 3),
-            "hdd_id"    => rand(1, 3),
+            "model"         => 'new model',
+            "currency"      => '$',
+            "price"         => 987.65,
+            "storage"       => 4000,
+            "ram_id"        => rand(1, 3),
+            "hdd_id"        => rand(1, 3),
             "location_id"   => rand(1, 3),
         ];
 
