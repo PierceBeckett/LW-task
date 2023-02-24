@@ -34,7 +34,8 @@ class ProductController extends Controller
     {
         $request->validate([
             'model'         => 'sometimes|string',
-            'ram_id'        => 'sometimes|exists:ram,id',
+            'ram_id'        => 'sometimes|array',
+            'ram_id.*'      => 'sometimes|exists:ram,id',
             'hdd_id'        => 'sometimes|exists:hdd,id',
             'location_id'   => 'sometimes|exists:locations,id',
             'storage_min'   => 'sometimes|numeric|lt:storage_max',
@@ -48,7 +49,7 @@ class ProductController extends Controller
             $query->where('model', 'LIKE', '%'.$request['model'].'%');
         }
         if ($request['ram_id']) {
-            $query->where('ram_id', $request['ram_id']);
+            $query->whereIn('ram_id', $request['ram_id']);
         }
         if ($request['hdd_id']) {
             $query->where('hdd_id', $request['hdd_id']);
