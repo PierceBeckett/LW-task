@@ -22,14 +22,15 @@ class ProductsImport implements ToModel, WithHeadingRow
         // sort out the lookup values
         $ramval = $this->tidyRam($row['ram']);
         $hddval = $this->hddType($row['hdd']);
+        $locval = $this->tidyLoc($row['location']);
         if (!Ram::where('value', $ramval)->exists()) {
             Ram::create(['value' => $ramval]);
         }
         if (!Hdd::where('value', $hddval)->exists()) {
             Hdd::create(['value' => $hddval]);
         }
-        if (!Location::where('value', $row['location'])->exists()) {
-            Location::create(['value' => $row['location']]);
+        if (!Location::where('value', $locval)->exists()) {
+            Location::create(['value' => $locval]);
         }
 
         // make the product
@@ -37,7 +38,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             "model"         => $row['model'],
             "ram_id"        => Ram::where('value', $ramval)->first()->id,
             "hdd_id"        => Hdd::where('value', $hddval)->first()->id,
-            "location_id"   => Location::where('value', $row['location'])->first()->id,
+            "location_id"   => Location::where('value', $locval)->first()->id,
             "currency"      => preg_replace('/[0-9.]+/', '', $row['price']),
             "price"         => floatval(preg_replace('/[^0-9.]+/', '', $row['price'])),
             "storage"       => $this->calcStorage($row['hdd']),
@@ -90,5 +91,10 @@ class ProductsImport implements ToModel, WithHeadingRow
         }
         
         return 'unknown';
+    }
+
+    private function tidyLoc(string $loc) : string
+    {
+        return substr($loc, 0, strlen($loc) - 6);
     }
 }

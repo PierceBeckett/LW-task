@@ -31,7 +31,7 @@
 
 		<style>
 			label {
-				width: 360px;
+				
 			}
 			.left {
 				float: left;
@@ -51,11 +51,22 @@
 			.rammer {
 				background-color: gray;
 			}
+			.lightgray {
+				background-color: lightgray;
+			}
+			.header {
+				background-color: green;
+				font-weight: bold;
+				color: white;
+			}
+			div.container {
+				width: 100%;
+			}
 		</style>
     </head>
-    <body class="antialiased">
+    <body className="antialiased">
 	
-		<div class="">
+		<div className="">
 			<h2>Pierce Beckett</h2>
 			<p>Basic web page for perusing the elements of the task challenge</p>
 		</div>
@@ -122,6 +133,7 @@
 				.catch((error) => {
 					setUploadFile();
 					alert('Upload failed. '+error);
+					modal.style.display = "none";
 				});
 			};
 
@@ -250,8 +262,8 @@
 					</select>
 					</label>
 
-					<label>Upload new data
-					{uploadFile?.name || "Choose CSV/XLS"}
+					<label>Upload new data &nbsp;
+					{uploadFile?.name != '' || "Choose CSV/XLS"}
 					<input type="file" name="products"
                 		accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
 						onClick={(e) => {
@@ -273,32 +285,31 @@
 					</div>
 
 					<div className="right">
-					<table>
-						<thead>
-						<tr>
-							<th>Model</th>
-							<th>Ram</th>
-							<th>HDD</th>
-							<th>Storage</th>
-							<th>Location</th>
-							<th>Price</th>
-						</tr>
-						</thead>
-						<tbody>
+					<div className='container'>
+						<div className='row header'>
+							<div className='twelve columns'>Model</div>
+							<div className='two columns'>Ram</div>
+							<div className='two columns'>HDD</div>
+							<div className='two columns'>Storage</div>
+							<div className='two columns'>Location</div>
+							<div className='two columns right'>Price</div>
+						</div>
 						{products.length > 0 && products.map((product) => {
 							return (
-								<tr key={product.id}>
-									<td>{product.model}</td>
-									<td>{product.ram}</td>
-									<td>{product.hdd}</td>
-									<td>{product.storage}GB</td>
-									<td>{product.location}</td>
-									<td>{product.currency+product.price}</td>
-								</tr>
+								<div className='row' key={product.id}>
+									<div className='twelve columns lightgray'>{product.model}</div>
+									<div className='two columns'>{product.ram}</div>
+									<div className='two columns'>{product.hdd}</div>
+									<div className='two columns'>
+									{product.storage < 1000 && product.storage+'GB'}
+									{product.storage >= 1000 && product.storage/1000+'TB'}
+									</div>
+									<div className='two columns'>{product.location}</div>
+									<div className='two columns right'>{product.currency+product.price}</div>
+								</div>
 							);
 						})}
-						</tbody>
-					</table>
+					</div>
 					</div>
 				</form>
 			);
@@ -311,7 +322,6 @@
 		<div class="footer">
 			<p>Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</p>
 		</div>
-
 
 		<div id="uploadModal" class="modal">
 			<!-- Modal content -->
