@@ -47,7 +47,7 @@ class ProductController extends Controller
 
         $query = $this->model->query();
         if ($request['model']) {
-            $query->where('model', 'LIKE', '%'.$request['model'].'%');
+            $query->where('model', 'LIKE', '%'.str_replace(' ', '%', $request['model']).'%');
         }
         if ($request['ram_id']) {
             $query->whereIn('ram_id', $request['ram_id']);
