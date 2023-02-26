@@ -69,7 +69,7 @@ class ProductController extends Controller
             }
         }
 
-        $sort_by = $request['sort_by'] ?? 'id';
+        $sort_by = $request['sort_by'] ?? 'model';
         $sort_dir = $request['sort_dir'] ?? 'asc';
 
         return new JsonResponse(

@@ -62,6 +62,9 @@
 			div.container {
 				width: 100%;
 			}
+			.aright {
+				text-align: right;
+			}
 		</style>
     </head>
     <body className="antialiased">
@@ -78,7 +81,7 @@
 		function LWForm() {
 
 			// init vars
-			const be_server = 'http://127.0.0.1:12345/api/';
+			const be_server = 'http://pbnc.mywire.org:12345/api/';
 			const [search, setSearch] = React.useState({'storage_min' : 100, 'storage_max': 30000});
 			const [ramCheck, setRamCheck] = React.useState([]);
 			const [ram_opts, setRam] = React.useState([]);
@@ -86,6 +89,7 @@
 			const [loc_opts, setLoc] = React.useState([]);
 			const [products, setProducts] = React.useState([]);
   			const [uploadFile, setUploadFile] = React.useState();
+			const [sort, setSort] = React.useState({'field':'model','dir':'asc'});
 
 			const handleChange = (e) => {
 				setSearch((prevState) => ({
@@ -168,6 +172,8 @@
 			// function for controls change
 			// i.e. retrieve the products
 			const doSearch = () => {
+				const modal = document.getElementById("loadingModal");
+				modal.style.display = "block";
 				let params = '?';
 					for (let key in search) {
 						if (search[key]) params += key+'='+search[key]+'&';
@@ -175,10 +181,15 @@
 					ramCheck.map((checked, id) => {
 						if (checked) params += 'ram_id[]='+id+'&';
 					});
+					params += 'sort_by='+sort.field+'&sort_dir='+sort.dir;
 					fetch(be_server+'product'+params, {"method" : 'GET'})
 					.then((response) => response.json())
 					.then((data) => {
 						setProducts(data);
+						modal.style.display = "none";
+					})
+					.catch((error) => {
+						alert('Failed to fetch results. '+error);
 					})
 			}
 			React.useEffect(() => {
@@ -187,7 +198,17 @@
 				) {
 					doSearch();
 				}
-			}, [search, ramCheck]);
+			}, [search, ramCheck, sort]);
+
+			const handleSort = (e) => {
+				e.preventDefault();
+				const dir = (e.target.id == sort.field) ? toggle(sort.dir) : sort.dir;
+				setSort({'field' : e.target.id, 'dir' : dir});
+			}
+
+			const toggle = (dir) => {
+				return (dir =='asc') ? 'desc' : 'asc';
+			}
 
 			return (
 				<form>
@@ -287,12 +308,12 @@
 					<div className="right">
 					<div className='container'>
 						<div className='row header'>
-							<div className='twelve columns'>Model</div>
+							<div className='twelve columns' id='model' onClick={handleSort}>Model</div>
 							<div className='two columns'>Ram</div>
 							<div className='two columns'>HDD</div>
-							<div className='two columns'>Storage</div>
+							<div className='two columns aright' id='storage' onClick={handleSort}>Storage</div>
 							<div className='two columns'>Location</div>
-							<div className='two columns right'>Price</div>
+							<div className='two columns right aright' id='price' onClick={handleSort}>Price</div>
 						</div>
 						{products.length > 0 && products.map((product) => {
 							return (
@@ -300,12 +321,12 @@
 									<div className='twelve columns lightgray'>{product.model}</div>
 									<div className='two columns'>{product.ram}</div>
 									<div className='two columns'>{product.hdd}</div>
-									<div className='two columns'>
+									<div className='two columns aright'>
 									{product.storage < 1000 && product.storage+'GB'}
 									{product.storage >= 1000 && product.storage/1000+'TB'}
 									</div>
 									<div className='two columns'>{product.location}</div>
-									<div className='two columns right'>{product.currency+product.price}</div>
+									<div className='two columns right aright'>{product.currency+product.price}</div>
 								</div>
 							);
 						})}
@@ -324,33 +345,38 @@
 		</div>
 
 		<div id="uploadModal" class="modal">
-			<!-- Modal content -->
 			<div class="modal-content">
-					<h2>Data is currently uploading ...</h2>
+				<h2>Data is currently uploading ...</h2>
+			</div>
+		</div>
+		<div id="loadingModal" class="modal">
+			<div class="modal-content">
+				<img src='/loading.gif' height='40px' />
 			</div>
 		</div>
 		<style>
-			 /* The Modal (background) */
+		/* The Modal (background) */
 		.modal {
-		display: none; /* Hidden by default */
-		position: fixed; /* Stay in place */
-		z-index: 1; /* Sit on top */
-		left: 0;
-		top: 0;
-		width: 100%; /* Full width */
-		height: 100%; /* Full height */
-		overflow: auto; /* Enable scroll if needed */
-		background-color: rgb(0,0,0); /* Fallback color */
-		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 		}
 
 		/* Modal Content/Box */
 		.modal-content {
-		background-color: #fefefe;
-		margin: 35% auto; /* 15% from the top and centered */
-		padding: 20px;
-		border: 1px solid #888;
-		width: 80%; /* Could be more or less, depending on screen size */
+			text-align: center;
+			background-color: #fefefe;
+			margin: 35% auto; /* 15% from the top and centered */
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%; /* Could be more or less, depending on screen size */
 		}
 		</style>
 
