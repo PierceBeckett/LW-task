@@ -30,9 +30,6 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 		<style>
-			label {
-				
-			}
 			.left {
 				float: left;
 			}
@@ -48,16 +45,17 @@
 				color: white;
 				text-align: center;
 			}
-			.rammer {
-				background-color: gray;
-			}
 			.lightgray {
 				background-color: lightgray;
+			}
+			.row {
+				padding: 5px;
 			}
 			.header {
 				background-color: green;
 				font-weight: bold;
 				color: white;
+				padding: 5px;
 			}
 			div.container {
 				width: 100%;
@@ -81,7 +79,7 @@
 		function LWForm() {
 
 			// init vars
-			const be_server = 'http://pbnc.mywire.org:12345/api/';
+			const be_server = 'http://127.0.0.1:12345/api/';
 			const [search, setSearch] = React.useState({'storage_min' : 100, 'storage_max': 30000});
 			const [ramCheck, setRamCheck] = React.useState([]);
 			const [ram_opts, setRam] = React.useState([]);
@@ -212,15 +210,16 @@
 
 			return (
 				<form>
-					<div className="left">
-					<label>Model &nbsp;
+				<div className="container">
+				<div className='row'>
+					<div className="three columns">
+					<label>Model</label>
 					<input
 						name="model"
 						type="text"
 						value={search.model}
 						onChange={handleChange}
 						/>
-					</label>
 
 					<label>Storage</label>
 					<div>
@@ -232,22 +231,25 @@
 						name="storage_max" onChange={handleChange} />
 					</div>
 
-					<label className='rammer'>RAM<br />
+					<label>RAM</label>
+						<div className="container lightgray">
+						<div className="row">
 						{ram_opts.length > 0 && ram_opts.map((option) => {
 							return 	(
-								<>
+								<div className="three columns" key={option.id}>
 								<label htmlFor={'ramChk-'+option.id}>{option.value}</label>
-								<input name="ram_id" type="checkbox" key={option.id} value={option.id} label={option.value}
+								<input name="ram_id" type="checkbox" value={option.id} label={option.value}
 									id={'ramChk-'+option.id}
-									isselected={ramCheck[option.id]}
+									isselected={ramCheck[option.id] ? 'selected' : ''}
 									onChange={() => handleRamChange(option.id)}
 								/>
-								</>
+								</div>
 							);
 						})}
-					</label>
+						</div>
+						</div>
 
-					<label>HDD &nbsp;
+					<label>HDD</label>
 					<select
 						name="hdd_id"
 						label="hdd"
@@ -263,9 +265,8 @@
 							);
 						})}
 					</select>
-					</label>
 
-					<label>Location &nbsp;
+					<label>Location</label>
 					<select
 						name="location_id"
 						label="loc"
@@ -281,9 +282,8 @@
 							);
 						})}
 					</select>
-					</label>
 
-					<label>Upload new data &nbsp;
+					<label>Upload new data</label>
 					{uploadFile?.name != '' || "Choose CSV/XLS"}
 					<input type="file" name="products"
                 		accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
@@ -302,10 +302,9 @@
 							}}
 						>{"Upload " + uploadFile?.name}</button>
 					)}
-					</label>
 					</div>
 
-					<div className="right">
+					<div className="nine columns">
 					<div className='container'>
 						<div className='row header'>
 							<div className='twelve columns' id='model' onClick={handleSort}>Model</div>
@@ -330,6 +329,8 @@
 								</div>
 							);
 						})}
+					</div>
+					</div>
 					</div>
 					</div>
 				</form>
