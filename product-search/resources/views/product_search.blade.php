@@ -188,6 +188,7 @@
 					})
 					.catch((error) => {
 						alert('Failed to fetch results. '+error);
+						modal.style.display = "none";
 					})
 			}
 			React.useEffect(() => {
@@ -311,7 +312,7 @@
 							<div className='two columns'>Ram</div>
 							<div className='two columns'>HDD</div>
 							<div className='two columns aright' id='storage' onClick={handleSort}>Storage</div>
-							<div className='two columns'>Location</div>
+							<div className='three columns'>Location</div>
 							<div className='two columns right aright' id='price' onClick={handleSort}>Price</div>
 						</div>
 						{products.length > 0 && products.map((product) => {
@@ -324,7 +325,7 @@
 									{product.storage < 1000 && product.storage+'GB'}
 									{product.storage >= 1000 && product.storage/1000+'TB'}
 									</div>
-									<div className='two columns'>{product.location}</div>
+									<div className='three columns'>{product.location}</div>
 									<div className='two columns right aright'>{product.currency+product.price}</div>
 								</div>
 							);
