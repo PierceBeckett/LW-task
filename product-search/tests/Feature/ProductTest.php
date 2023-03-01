@@ -30,6 +30,42 @@ class ProductTest extends TestCase
         $this->assertCount(3, json_decode($response->content()));
     }
 
+    public function testProductsListFilters() : void
+    {
+        $response = $this->get('api/product?model=ultra');
+        $response
+            ->assertStatus(200)
+            ->assertJsonIsArray();
+
+        // 1 seeder products
+        $this->assertCount(1, json_decode($response->content()));
+
+        $response = $this->get('api/product?hdd_id=2');
+        $response
+            ->assertStatus(200)
+            ->assertJsonIsArray();
+
+        // 2 seeder products
+        $this->assertCount(2, json_decode($response->content()));
+
+        $response = $this->get('api/product?location_id=4');
+        $response
+            ->assertStatus(200)
+            ->assertJsonIsArray();
+
+        // 1 seeder products
+        $this->assertCount(1, json_decode($response->content()));
+
+
+        $response = $this->get('api/product?model=ABC&hdd_id=2&location_id=4');
+        $response
+            ->assertStatus(200)
+            ->assertJsonIsArray();
+
+        // no seeder products
+        $this->assertCount(0, json_decode($response->content()));
+    }
+
     public function testProductAddDelete() : void
     {
         $data = [
