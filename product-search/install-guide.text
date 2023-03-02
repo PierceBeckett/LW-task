@@ -1,7 +1,10 @@
+This can be run in two ways:
+
+- Using Docker & laravel sail
 
 You'll need a computer with Docker (with WSL2 if you're on Windows)
 
-Choose a folder on you machine where you'll store the code.
+Choose a folder on your machine where you'll store the code.
 Open a command prompt and run the following commands:
 
 ==================================================
@@ -28,3 +31,14 @@ The backend API is at http://127.0.0.1:12345/api
 
 You can find a postman file within this repo for checking it directly.
 
+To stop the docker container run
+sail down
+and in future you can start the containers again using
+sail up -d
+
+
+- Using a regular web server (nginx/apache) with PHP 8.2+ enabled
+
+Set up a web alias pointing to the LW-task/product-search/public folder
+The frontend is accessible at {your-server/alias}
+The backend API is at {your-server/alias}/api
